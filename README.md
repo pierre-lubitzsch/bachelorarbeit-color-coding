@@ -1,2 +1,2 @@
 # bachelorarbeit-color-coding
-Bachelorarbeit über finden von subgraphen mithilfe von color-coding
+Bachelorarbeit über das Finden von Subgraphen mithilfe von color-coding
