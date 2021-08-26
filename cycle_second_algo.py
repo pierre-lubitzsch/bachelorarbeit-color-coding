@@ -7,6 +7,14 @@ import itertools
 
 
 """
+problems:
+ - a problem while the implementation was the base case for the recursion in find_colorful_paths.
+ - debugging was not quite easy when all i had as a result were the adjacency matrices, because i did not implement the algorithm for witness finding in boolean matrix multiplication yet
+"""
+
+
+
+"""
 original_G is the graph we had at the first call of this function
 colors are the colors we are currently using
 """

@@ -4,6 +4,11 @@ import math
 import random
 
 
+"""
+problems:
+ - here the only task was to output all possible k-paths using the previous algorithm and then checking whether there is an edge between the first and last node of the path
+"""
+
 
 def find_colorful_paths_from_node(G: nx.graph.Graph, k: int, c: dict, start_vertex: int) -> [()]:
     paths = set()
@@ -57,6 +62,7 @@ def find_paths(G: nx.graph.Graph, k: int, start_vertex: int) -> [()]:
 
 
 def find_cycle(G: nx.graph.Graph, k: int) -> ():
+    # we return () on k <= 2 because we only take simple graphs as input
     if (k <= 2 or k > len(list(G.nodes))):
         return ()
 
@@ -79,7 +85,7 @@ def find_cycle(G: nx.graph.Graph, k: int) -> ():
 
 
 def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
-    if (len(path) != k):
+    if (len(path) < k):
         return False
     for i in range(len(path) - 1):
         if (not G.has_edge(path[i], path[i + 1])):
@@ -88,7 +94,7 @@ def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
 
 
 def test_cycle_length_k(G: nx.graph.Graph, cycle : [], k: int):
-    if (len(cycle) != k + 1):
+    if (len(cycle) < k + 1):
         return False
     for i in range(len(path) - 1):
         if (not G.has_edge(cycle[i], cycle[i + 1])):

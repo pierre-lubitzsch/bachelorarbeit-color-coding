@@ -4,6 +4,16 @@ import math
 import random
 
 """
+implementation problems:
+ - in the predecessor array do we save the whole path up until now or just the last vertex?
+   i decided to save the whole path because if we would only save the last node we would have to reconstruct the set and because we save the colorset in dp also
+   the space is 2k instead of k + 1, which is both O(k) and it is easier to implement using the method where yo save the whole path
+ - another problem was that i needed a set of sets/lists and in python lists and sets are not hashable (because they are mutable).
+   then i discovered that socalled "frozensets" exists, which is basically a constant set which is hashable. i used this then for my dp table and pred table
+"""
+
+
+"""
 Spanning tree algo
 """
 def prim(G: nx.graph.Graph, n: int) -> nx.graph.Graph:
@@ -119,7 +129,7 @@ def find_path(G_in: nx.graph.Graph, k: int) -> bool:
 returns True iff path is a path of length k in G
 """
 def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
-    if (len(path) != k):
+    if (len(path) < k):
         return False
     for i in range(len(path) - 1):
         if (not G.has_edge(path[i], path[i + 1])):
