@@ -3,6 +3,10 @@ import numpy as np
 import itertools
 
 
+# problems: getting from the construction for one set S subset U to the powerset and that you can just iterate over the different parameters
+
+
+
 def h_alpha(x, k, p, n):
     return ((k * x) % p) % (n * n)
 
@@ -87,13 +91,13 @@ def get_kperfect_hash_family(m, n):
                         # for any element s of the universe U we calculate i = h_beta(h_alpha(s)) which is the bucket of the element (i \in {0, 1, ..., n - 1}).
                         # then we calculate the color/hash for s like this: C[i] + h_i(h_alpha(s)). this is without the compression table from {1, 2, ..., 3n} -> {1, 2, ..., n}.
                         # guessing the compression table would take time n^{3n}, because there are n^{3n} functions from {1, 2, ..., 3n} -> {1, 2, ..., n}.
-                        family.append([k, p, kappa, rho, K, c, C])
-                        #if (len(family) % 1000000 == 0):
-                        #    print("family has length >=", len(family))
+                        family.append((k, p, kappa, rho, K, c, C))
+                        if (len(family) % 1000000 == 0):
+                            print("family has length >=", len(family))
 
     return family
 
-chi = get_kperfect_hash_family(10, 4)
+chi = get_kperfect_hash_family(100, 3)
 print(len(chi))
 
 

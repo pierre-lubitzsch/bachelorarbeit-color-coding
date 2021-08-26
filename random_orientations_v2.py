@@ -3,6 +3,11 @@ import networkx as nx
 
 
 
+# problems:
+# - took a bit to realize in the beginning that when you choose the edges for the random orientation like this we
+#   get an acyclic graph and can therefore apply the algorithm for finding the longest directed path in a DAG in time O(E)
+
+
 # algorithm from [CLR90]
 def longest_directed_path(G: nx.DiGraph, pi: [], n: int) -> []:
     # construct topological sort from permutation which influenced the edges
@@ -55,6 +60,20 @@ def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
     
 
 
+def dfs(G: nx.graph.Graph, node, k, visited):
+    if (k <= 1):
+        return [node]
+    
+    for v in G.adj[node]:
+        if not visited[v]:
+            visited[v] = True
+            path = dfs(G, v, k - 1, visited)
+            if (path != []):
+                return [node] + path
+    
+    return []
+
+
 # setup directed acyclic graph from random permutation of vertices and run longest directed path in DAG algo on it (k + 1)! / 2 times to get the right result in the expected case
 def find_path_random_orientation(G: nx.graph.Graph, k: int) -> []:
     n = len(list(G.nodes))
@@ -62,28 +81,12 @@ def find_path_random_orientation(G: nx.graph.Graph, k: int) -> []:
         return []
 
 
-    # if E > k * V we can find the path in O(k*V) time with the approach from [Bod93]
-    """
-    TODO
-    if (len(list(G.edges)) > k * n):
-        pred = [None] * n
-        visited = [False] * n
-
-        for u in G.nodes:
-            # reset predecessors and visited tags
-            for i in range(n):
-                pred[i] = None
-                visited[i] = False
-
-            # execute dfs with u as root
-            end_node = dfs_find_path(G, pred, visited, u, k)
-            if (end_node != None):
-                path = []
-                while (end_node != None):
-                    path.append(end_node)
-                    end_node = pred[end_node]
-                return path
-    """
+    # if E >= k * V we will find a path using dfs from arbitrary root getting to depth k
+    root = list(G.nodes)[0]
+    visited = [False] * n
+    path = dfs(G, root, k, visited)
+    if (path != []):
+        return path
 
     # if we are here then we have E <= k * V  and because we find the longest path in time O(E) we have O((k + 1)!E) = O((k + 2)!V) runtime
 
