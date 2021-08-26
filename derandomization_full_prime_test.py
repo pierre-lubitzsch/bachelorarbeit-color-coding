@@ -48,17 +48,18 @@ def get_kperfect_hash_family(m, n):
     # now rho is the first prime number bigger than n^2
 
 
-    n_lists = [list(range(n)) for _ in range(n)]
+
+    n_lists = [tuple(range(n)) for _ in range(n)]
     cartesian_product_n_lists = list(itertools.product(*n_lists))
     # filter out lists where the condition for the hash function doesnt hold (condition: \sum c_i^2 <= 3n)
     cartesian_product_n_lists_sum_squared_le_3n = list(filter(sum_squared_le_3n, cartesian_product_n_lists))
 
-    rho_lists = [list(range(rho)) for _ in range(n)]
+    rho_lists = [tuple(range(rho)) for _ in range(n)]
     cartesian_product_rho_lists = list(itertools.product(*rho_lists))
 
     # testing
-    print("max_k = ", n * n - 1)
-    for k in range(1, n * n):
+    print("max_k = ", math.ceil(n * n * np.log(m)) - 1)
+    for k in range(1, math.ceil(n * n * np.log(m))):
         print("k = ", k)
         for p in range(k + 1, math.ceil(n * n * np.log(m))):
             # above we calculated all primes below 2n^2, therefore we can skip numbers below 2n^2 if they are not marked as prime
@@ -97,15 +98,56 @@ def get_kperfect_hash_family(m, n):
 
     return family
 
-chi = get_kperfect_hash_family(100, 3)
+
+
+chi = get_kperfect_hash_family(10, 3)
 print(len(chi))
 
 
+print("testing...")
+
+def test_kperfect_family(m, n, family):
+    subsets = list(itertools.combinations(list(range(m)), n))
+    for s in subsets:
+        found = False
+        for  (k, p, kappa, rho, K, c, C) in family:
+            double_hit = False
+            colors = [0] * (3 * n + 1)
+
+            # check compatability of hash function (we need the c_i's to be the same)
+            real_c = [0] * n
+            for x in s:
+                t = h_alpha(x, k, p, n)
+                i = h_beta(t, kappa, rho, n)
+                real_c[i] += 1
+            real_c = tuple(real_c)
+
+            if (c != real_c):
+                continue
+
+            for x in s:
+                t = h_alpha(x, k, p, n)
+                i = h_beta(t, kappa, rho, n)
+                color = C[i] + h_i(t, K[i], rho, c[i])
+                if colors[color] > 0:
+                    double_hit = True
+                    break
+                else:
+                    colors[color] += 1
+            
+            if not double_hit:
+                found = True
+                break
+
+        print(s, "is done")
+        if not found:
+            print(s, "has no perfect coloring in", list(range(m), "with this family"))
+            return False
+            
+    return True
 
 
-
-
-
+print(test_kperfect_family(10, 3, chi))
 
 
 
