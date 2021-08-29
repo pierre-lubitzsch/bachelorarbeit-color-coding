@@ -9,8 +9,11 @@ import derandomization_full_prime_test as derandomize
 
 """
 problems:
- - a problem while the implementation was the base case for the recursion in find_colorful_paths.
- - debugging was not quite easy when all i had as a result were the adjacency matrices, because i did not implement the algorithm for witness finding in boolean matrix multiplication yet
+ - here i needed to change the first step in the recursion, because the hash functions from the derandomization family
+   hash n nodes to values from 0 to 3k - 1 and not 0 to k - 1.
+   this should 'only' affect the first level, because then we just looping through (3k choose k//2) and (3k choose (k+1)//2)
+   and we forget about the other colors. this obviously takes a bit longer (3k choose k/2)^2 instead of (k choose k/2) for the first level.
+   but (3k choose k/2)^2 \in O((2^(3k))^2) = O(64^k) = 2^O(k)
 """
 
 
