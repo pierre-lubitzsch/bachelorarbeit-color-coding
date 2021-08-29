@@ -10,7 +10,7 @@ def h_beta(x, kappa, rho, n):
     return ((kappa * x) % rho) % n
 
 def h_i(x, k_i, rho, c_i):
-    return ((k_i * x) % rho) % (c_i * c_i)
+    return ((k_i * x) % rho) % (c_i * c_i) if c_i > 0 else 0
 
 
 def sum_squared_le_3n(A):

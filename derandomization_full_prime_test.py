@@ -14,7 +14,7 @@ def h_beta(x, kappa, rho, n):
     return ((kappa * x) % rho) % n
 
 def h_i(x, k_i, rho, c_i):
-    return ((k_i * x) % rho) % (c_i * c_i)
+    return ((k_i * x) % rho) % (c_i * c_i) if c_i > 0 else 0
 
 
 def sum_squared_le_3n(A):
@@ -27,15 +27,14 @@ def sum_squared_le_3n(A):
 # m = number of elements in universe U = {0, 1, ..., m - 1}
 # n = for all n-subsets A of U there exists a function f in the solution family such that A is perfectly hashed by f
 def get_kperfect_hash_family(m, n):
-    family = []
-
     # find a prime \rho > n^2 to use for h_{\beta}
     # we know that for all natural numbers x > 1 there always exists a prime between x and 2x by bertrand's postulate. Therefore 2n^2 is our upper bound for the sieve
     # use sieve of eratosthenes with upper bound and pick first prime larger than n * n
-    isprime = [True for _ in range(math.ceil(n * n * np.log(m)) + 1)]
+    # we write max(2, np.log(m)) because we want to use bertrands postulate and therefore need the 2. the log m we need for'prime tests later
+    isprime = [True for _ in range(math.ceil(n * n * max(2, np.log(m))) + 1)]
     prime_it = 2
 
-    while (prime_it * prime_it <= math.ceil(n * n * np.log(m))):
+    while (prime_it * prime_it <= math.ceil(n * n * max(2, np.log(m)))):
         if (isprime[prime_it]):
             for i in range(prime_it * prime_it, math.ceil(n * n * np.log(m)) + 1, prime_it):
                 isprime[i] = False
@@ -57,9 +56,11 @@ def get_kperfect_hash_family(m, n):
     rho_lists = [tuple(range(rho)) for _ in range(n)]
     cartesian_product_rho_lists = list(itertools.product(*rho_lists))
 
+    family_size = 0
+
     # testing
-    print("max_k = ", math.ceil(n * n * np.log(m)) - 1)
-    for k in range(1, math.ceil(n * n * np.log(m))):
+    print("max_k = ", min(m - 1, math.ceil(n * n * np.log(m)) - 1))
+    for k in range(1, min(m, math.ceil(n * n * np.log(m)))):
         print("k = ", k)
         for p in range(k + 1, math.ceil(n * n * np.log(m))):
             # above we calculated all primes below 2n^2, therefore we can skip numbers below 2n^2 if they are not marked as prime
@@ -92,23 +93,26 @@ def get_kperfect_hash_family(m, n):
                         # for any element s of the universe U we calculate i = h_beta(h_alpha(s)) which is the bucket of the element (i \in {0, 1, ..., n - 1}).
                         # then we calculate the color/hash for s like this: C[i] + h_i(h_alpha(s)). this is without the compression table from {1, 2, ..., 3n} -> {1, 2, ..., n}.
                         # guessing the compression table would take time n^{3n}, because there are n^{3n} functions from {1, 2, ..., 3n} -> {1, 2, ..., n}.
-                        family.append((k, p, kappa, rho, K, c, C))
-                        if (len(family) % 1000000 == 0):
-                            print("family has length >=", len(family))
+                        yield (k, p, kappa, rho, K, c, C)
+                        
+                        # for testing
+                        family_size += 1
+                        if (family_size % 1000000 == 0):
+                            print("family has length >=", family_size)
 
-    return family
 
-
-
-chi = get_kperfect_hash_family(10, 3)
-print(len(chi))
-
+"""
+chi = tuple(get_kperfect_hash_family(15, 3))
 
 print("testing...")
+"""
 
 def test_kperfect_family(m, n, family):
     subsets = list(itertools.combinations(list(range(m)), n))
+    biggest_idx_needed = -1
+
     for s in subsets:
+        idx = 0
         found = False
         for  (k, p, kappa, rho, K, c, C) in family:
             double_hit = False
@@ -136,18 +140,22 @@ def test_kperfect_family(m, n, family):
                     colors[color] += 1
             
             if not double_hit:
+                biggest_idx_needed = max(biggest_idx_needed, idx)
                 found = True
                 break
+            idx += 1
 
         print(s, "is done")
         if not found:
             print(s, "has no perfect coloring in", list(range(m), "with this family"))
             return False
             
+    print("size of family:", len(family))
+    print("biggest index needed =", biggest_idx_needed)
     return True
 
 
-print(test_kperfect_family(10, 3, chi))
+# print(test_kperfect_family(15, 3, chi))
 
 
 
