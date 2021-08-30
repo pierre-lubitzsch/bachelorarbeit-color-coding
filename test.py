@@ -68,11 +68,11 @@ def main():
     # we want to form a forest containing 3 star graphs
     F = nx.star_graph(2)
 
-    F.add_nodes_from([3, 4, 5, 6, 7, 8])
+    F.add_nodes_from([3, 4, 5, 6, 7, 8, 9])
     F.add_edges_from([(3, 4), (3, 5), (6, 7), (6, 8)])
 
     colorset, subtrees = forest.find_forest(G, F, len(G.nodes), len(F.nodes))
-    print("does G contain three stargraphs having 3 nodes?", colorset, subtrees)
+    print("does G contain three stargraphs having 3 nodes and an isolated one?", colorset, subtrees)
     #print("does G contain its spanning tree?", tree.find_tree(G, T, len(G.nodes), len(T.nodes)))
 
 

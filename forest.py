@@ -60,7 +60,7 @@ find a copy of a forest F on k vertices in a graph G on n vertices
 """
 def find_forest(G: nx.graph.Graph, F: nx.graph.Graph, n: int, k: int):
     if (k > n):
-        return "NO"
+        return (None, None)
     c = dict()
 
     trees = [F.subgraph(component).copy() for component in nx.connected_components(F)]
@@ -75,4 +75,4 @@ def find_forest(G: nx.graph.Graph, F: nx.graph.Graph, n: int, k: int):
         if ((colors, forest) != (None, None)):
             return colors, forest
 
-    return "NO"
+    return (None, None)

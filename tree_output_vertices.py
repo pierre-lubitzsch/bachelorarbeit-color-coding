@@ -62,7 +62,7 @@ find a copy of a tree T on k vertices in a graph G on n vertices
 """
 def find_tree(G: nx.graph.Graph, T: nx.graph.Graph, n: int, k: int):
     if (k > n):
-        return "NO"
+        return (None, None)
     c = dict()
 
     # get a random coloring e^k times and execute the coloring algorithm with it
@@ -77,4 +77,4 @@ def find_tree(G: nx.graph.Graph, T: nx.graph.Graph, n: int, k: int):
                 tree_colorset = list(treetable[v].keys())[0]
                 return tree_colorset, treetable[v][tree_colorset]
 
-    return "NO"
+    return (None, None)
