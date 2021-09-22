@@ -14,44 +14,6 @@ implementation problems:
 
 
 """
-Spanning tree algo
-"""
-def prim(G: nx.graph.Graph, n: int) -> nx.graph.Graph:
-    if (len(list(G.nodes)) < 1):
-        return nx.Graph()
-    T = nx.Graph()
-
-    x = list(G.nodes)[0]
-    T.add_node(x)
-
-    visited_nodes = set()
-    visited_nodes.add(x)
-    T_weight = 0
-
-    for i in range(n - 1):
-        e = None
-        for u in T.nodes:
-            for v in G.adj[u]:
-                if v in visited_nodes:
-                    continue
-
-                if e == None or G[u][v]["weight"] < G[e[0]][e[1]]["weight"]:
-                    e = (u, v)
-
-        
-        (u, v) = e
-        if (u not in visited_nodes):
-            u, v = v, u
-        T.add_node(v)
-        visited_nodes.add(v)
-        T.add_edge(u, v, weight=G[u][v]["weight"])
-        T_weight += G[u][v]["weight"]
-
-    print("weight of T:", T_weight)
-    return T
-
-
-"""
 dp[v][l] contains all colorsets appearing on a path of length l from start_vertex to v.
 pred[v][colorset] contains the predecessor node of a path from start_vertex to v using the set of colors "colorset"
 
@@ -160,22 +122,3 @@ def main():
 
 if (__name__ == "__main__"):
     main()
-
-    """
-    print(list(G.nodes))
-    for (u, v) in G.edges:
-        print(u, v, G[u][v]["weight"])
-
-    nx.draw(T, with_labels=True, font_weight="bold")
-    plt.savefig("abcdefg.png")
-    plt.show()
-
-
-    debug
-    print('\n\n\n\n\n')
-    for i in range(k):
-        print("length =", i)
-        for v in G.nodes:
-            print("Node: {}, colorsets: {}".format(v, dp[v][i]))
-    """
-
