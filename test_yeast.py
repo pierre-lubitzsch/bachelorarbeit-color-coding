@@ -2,7 +2,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import math
 import path_v4 as path
-
+import cycle_first_algo
+import sys
+from timeit import default_timer as timer
 
 def main():
     G = nx.Graph()
@@ -20,8 +22,31 @@ def main():
                 G.add_edge(u - 1, v - 1)
     
 
-    for i in range(1, 15):
-        print("Does G contain P_{}? {}".format(i, path.find_path(G, i)))
+    if (len(sys.argv) > 1):
+        if (sys.argv[1] == "path"):
+            for i in range(1, 15):
+                start = timer()
+                cur_path = path.find_path(G, i)
+                end = timer()
+                print("Does G contain P_{}? {}".format(i, cur_path))
+                print("Finding it took {:.3f} seconds\n".format(end - start))
+
+        if (sys.argv[1] == "cycle1"):
+            for i in range(1, 15):
+                start = timer()
+                cur_path = cycle_first_algo.find_cycle(G, i)
+                end = timer()
+                print("Does G contain C_{}? {}".format(i, cur_path))
+                print("Finding it took {:.3f} seconds\n".format(end - start))
+    else:
+        # find path
+        for i in range(1, 15):
+            start = timer()
+            cur_path = path.find_path(G, i)
+            end = timer()
+            print("Does G contain P_{}? {}".format(i, cur_path))
+            print("Finding it took {:.3f} seconds\n".format(end - start))
+    
 
 
 

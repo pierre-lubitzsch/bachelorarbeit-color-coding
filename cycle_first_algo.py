@@ -34,8 +34,10 @@ def find_colorful_paths_from_node(G: nx.graph.Graph, k: int, c: dict, start_vert
                         pred[u][const_set] = pred[v][colorset] + (v,)
 
     for v in G.nodes:
+        # break the loop instantly because we only need one path from start_vertex to v if one exists
         for colorset in dp[v][k - 1]:
             paths.add(pred[v][colorset] + (v,))
+            break
     
     return paths
 

@@ -50,8 +50,8 @@ def find_colorful_paths(G: nx.graph.Graph, k: int, c: dict, original_G: nx.graph
     for c_1 in subsets:
         c_2 = set((i for i in colors if i not in c_1))
 
-        V_1 = [v for v in G.nodes if c[v] in c_1]
-        V_2 = [v for v in G.nodes if c[v] in c_2]
+        V_1 = set((v for v in G.nodes if c[v] in c_1))
+        V_2 = set((v for v in G.nodes if c[v] in c_2))
 
         G_1 = G.copy()
         G_2 = G.copy()
@@ -73,16 +73,7 @@ def find_colorful_paths(G: nx.graph.Graph, k: int, c: dict, original_G: nx.graph
                 if (original_G.has_edge(i, j)):
                     B[i][j] = B[j][i] = 1
 
-        #print("At k = {}".format(k))
-        #print("Got from {}:\n{}".format(V_1, A_1))
-        #print("Got from {}:\n{}".format(V_2, A_2))
-        #print("Adjacency between {} and {}:\n{}".format(V_1, V_2, B))
-
         cur_paths = np.dot(np.dot(A_1, B), A_2)
-
-        #print("Result for this time:\n{}".format(cur_paths))
-        #print("\n\n\n")
-
         paths = np.logical_or(paths, cur_paths)
 
     return paths
@@ -106,7 +97,6 @@ def find_cycle(G: nx.graph.Graph, k: int) -> bool:
             for j in range(n):
                 if ((cycles[i][j] or cycles[j][i]) and G.has_edge(i, j)):
                     return (i, j)
-                    return True    
         
     return False
 

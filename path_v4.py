@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import math
 import random
+from random_orientations_v2 import dfs
 
 """
 implementation problems:
@@ -54,10 +55,19 @@ execute the colorful copy path-finding algorithm to find P_k at most e^k times
 with uniformly random colorings c : V -> [k]
 """
 def find_path(G_in: nx.graph.Graph, k: int) -> bool:
-    if (k > len(list(G_in.nodes))):
-        return []
     c = dict()
     G = nx.graph.Graph(G_in)
+
+    n = len(list(G.nodes))
+    if (k > n):
+        return []
+
+    # if E >= k * V we will find a path using dfs from arbitrary root getting to depth k
+    root = list(G.nodes)[0]
+    visited = [False] * n
+    path = dfs(G, root, k, visited)
+    if (path != []):
+        return path
 
     # add a vertex "start_vertex" to G and connect it to all other vertices and color it with the new color 0.
     # now we need to find a colorful path of length k + 1 starting from start_vertex.
