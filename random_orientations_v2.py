@@ -74,24 +74,23 @@ def dfs(G: nx.graph.Graph, node, k, visited):
     return []
 
 
-# setup directed acyclic graph from random permutation of vertices and run longest directed path in DAG algo on it (k + 1)! / 2 times to get the right result in the expected case
+# setup directed acyclic graph from random permutation of vertices and run longest directed path in DAG algo on it k! / 2 times to get the right result in the expected case
 def find_path_random_orientation(G: nx.graph.Graph, k: int) -> []:
     n = len(list(G.nodes))
     if (k > n):
         return []
 
-
-    # if E >= k * V we will find a path using dfs from arbitrary root getting to depth k
+    # if E >= (k - 1) * V we will find a path using dfs from arbitrary root getting to depth k
     root = list(G.nodes)[0]
     visited = [False] * n
     path = dfs(G, root, k, visited)
     if (path != []):
         return path
 
-    # if we are here then we have E <= k * V  and because we find the longest path in time O(E) we have O((k + 1)!E) = O((k + 2)!V) runtime
+    # if we are here then we have E < k * V  and because we find the longest path in time O(E) we have O(k! E) = O((k + 1)!V) runtime
 
-    # execute algorithm (k + 1)! / 2 rounded up times to get the correct result in the expected case
-    for _ in range((np.math.factorial(k + 1) + 1) // 2):
+    # execute algorithm k! / 2 rounded up times to get the correct result in the expected case
+    for _ in range((np.math.factorial(k) + 1) // 2):
         # choose random permutation
         pi = np.random.permutation(n)
         G_directed = nx.DiGraph()
@@ -133,7 +132,6 @@ def main():
             (u, v, w) = line.split(';')
             G.add_edge(int(u), int(v), weight=float(w))
 
-    #T = prim(G, len(list(G.nodes)))
 
     for i in range(1, 12):
         print("Does G contain P_{}? {}".format(i, find_path_random_orientation(G, i)))
@@ -142,22 +140,3 @@ def main():
 
 if (__name__ == "__main__"):
     main()
-
-    """
-    print(list(G.nodes))
-    for (u, v) in G.edges:
-        print(u, v, G[u][v]["weight"])
-
-    nx.draw(T, with_labels=True, font_weight="bold")
-    plt.savefig("abcdefg.png")
-    plt.show()
-
-
-    debug
-    print('\n\n\n\n\n')
-    for i in range(k):
-        print("length =", i)
-        for v in G.nodes:
-            print("Node: {}, colorsets: {}".format(v, dp[v][i]))
-    """
-
