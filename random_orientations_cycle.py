@@ -18,7 +18,7 @@ def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
 # setup directed acyclic graph to raise its adjacency matrix to the (k - 1)st power.
 def find_cycle_random_orientation(G: nx.graph.Graph, k: int) -> []:
     n = len(list(G.nodes))
-    if (k > n):
+    if (k > n or k <= 2):
         return ()
 
     # execute algorithm k! / 2 rounded up times to get the correct result in the expected case
@@ -43,7 +43,7 @@ def find_cycle_random_orientation(G: nx.graph.Graph, k: int) -> []:
         B = np.linalg.matrix_power(A, k - 1)
         for u in range(n):
             for v in range(n):
-                if (B[u][v] != 0 and G.has_edge(u, v)):
+                if (B[u][v] != 0 and G.has_edge(v, u)):
                     return (u, v)
 
     return ()
