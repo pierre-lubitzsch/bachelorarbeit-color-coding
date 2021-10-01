@@ -15,13 +15,11 @@ def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
     
 
 
-# setup directed acyclic graph from random permutation of vertices and run longest directed path in DAG algo on it k! / 2 times to get the right result in the expected case
+# setup directed acyclic graph to raise its adjacency matrix to the (k - 1)st power.
 def find_cycle_random_orientation(G: nx.graph.Graph, k: int) -> []:
     n = len(list(G.nodes))
     if (k > n):
         return ()
-
-    # if we are here then we have E < k * V  and because we find the longest path in time O(E) we have O(k! E) = O((k + 1)!V) runtime
 
     # execute algorithm k! / 2 rounded up times to get the correct result in the expected case
     for _ in range((np.math.factorial(k) + 1) // 2):
