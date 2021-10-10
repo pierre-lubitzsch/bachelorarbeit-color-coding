@@ -36,7 +36,7 @@ def get_kperfect_hash_family(m, n):
 
     while (prime_it * prime_it <= math.ceil(n * n * max(2, np.log(m)))):
         if (isprime[prime_it]):
-            for i in range(prime_it * prime_it, math.ceil(n * n * np.log(m)) + 1, prime_it):
+            for i in range(prime_it * prime_it, math.ceil(n * n * max(2, np.log(m))) + 1, prime_it):
                 isprime[i] = False
         prime_it += 1
     
@@ -156,30 +156,3 @@ def test_kperfect_family(m, n, family):
 
 
 # print(test_kperfect_family(15, 3, chi))
-
-
-
-
-
-"""
-# look at h_beta(h_alpha(U)) and construct secondary hash functions h_i
-# c[i] contains all x \in universe U which are mapped to bucket i by (h_beta \circ h_alpha)
-c = [[] for _ in range(n)]
-for x in range(m):
-    bucket_index = h_beta(h_alpha(x, k, p, n), kappa, rho, n)
-    c[bucket_index].append(x)
-"""
-"""
-DON'T USE, because this condition can only be checked for specific n-sets, we want to do it for all n-sets. just take all possibilities
-# we can only use this kappa if \sum_{i = 0}^{n - 1} c[i]^2 < 3n (because only then we can store the function in a table of size 3n with the method we use)
-sum_bucket_sizes_squared = 0
-for i in range(n):
-    sum_bucket_sizes_squared += len(c[i]) * len(c[i])
-if (sum_bucket_sizes_squared >= 3 * n):
-    continue
-"""
-"""
-bucket_offset = [0] * n
-for i in range(1, n):
-    bucket_offset[i] = bucket_offset[i - 1] + len(c[i - 1]) * len(c[i - 1])
-"""
