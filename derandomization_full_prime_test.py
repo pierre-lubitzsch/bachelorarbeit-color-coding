@@ -60,7 +60,7 @@ def get_kperfect_hash_family(m, n):
 
     # testing
     print("max_k = ", min(m - 1, math.ceil(n * n * np.log(m)) - 1))
-    for k in range(1, min(m, math.ceil(n * n * np.log(m)))):
+    for k in range(1, math.ceil(n * n * np.log(m))):
         print("k = ", k)
         for p in range(k + 1, math.ceil(n * n * np.log(m))):
             # above we calculated all primes below 2n^2, therefore we can skip numbers below 2n^2 if they are not marked as prime
