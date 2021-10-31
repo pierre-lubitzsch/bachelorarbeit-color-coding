@@ -12,6 +12,7 @@ import cycle_second_algo_derandomized
 import random_orientations_cycle
 import random_orientations_path
 
+# source: http://vlado.fmf.uni-lj.si/pub/networks/data/bio/yeast/yeast.htm
 
 def main():
     if (len(sys.argv) < 4):
