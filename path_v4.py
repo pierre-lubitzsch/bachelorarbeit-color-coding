@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import math
 import random
-from random_orientations_v2 import dfs
+from random_orientations_path import dfs
 
 """
 implementation problems:
@@ -63,17 +63,20 @@ def find_path(G_in: nx.graph.Graph, k: int) -> bool:
         return []
 
     # if E >= k * V we will find a path using dfs from arbitrary root getting to depth k
+    """
+    # we comment this out for the example graph where we only use this if we enable it
     root = list(G.nodes)[0]
     visited = [False] * n
     path = dfs(G, root, k, visited)
-    if (path != []):
+    if (path != [] and test_path_length_k(G, path, k)):
         return path
+    """
 
     # add a vertex "start_vertex" to G and connect it to all other vertices and color it with the new color 0.
     # now we need to find a colorful path of length k + 1 starting from start_vertex.
     start_vertex = 1 + max(G.nodes)
     G.add_node(start_vertex)
-    c[start_vertex] = 0
+    c[start_vertex] = -1
     for v in G.nodes:
         if v != start_vertex:
             G.add_edge(start_vertex, v)

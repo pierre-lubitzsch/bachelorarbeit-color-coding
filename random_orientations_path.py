@@ -61,12 +61,14 @@ def test_path_length_k(G: nx.graph.Graph, path : [], k: int):
 
 
 def dfs(G: nx.graph.Graph, node, k, visited):
+    if (visited[node]):
+        return []
+    visited[node] = True
     if (k <= 1):
         return [node]
     
     for v in G.adj[node]:
         if not visited[v]:
-            visited[v] = True
             path = dfs(G, v, k - 1, visited)
             if (path != []):
                 return [node] + path
@@ -80,12 +82,15 @@ def find_path_random_orientation(G: nx.graph.Graph, k: int) -> []:
     if (k > n):
         return []
 
+    """
+    comment out to test actual algorithm
     # if E >= (k - 1) * V we will find a path using dfs from arbitrary root getting to depth k
     root = list(G.nodes)[0]
     visited = [False] * n
     path = dfs(G, root, k, visited)
     if (path != []):
         return path
+    """
 
     # if we are here then we have E < k * V  and because we find the longest path in time O(E) we have O(k! E) = O((k + 1)!V) runtime
 

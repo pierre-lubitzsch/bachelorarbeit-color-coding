@@ -82,7 +82,7 @@ def find_cycle(G: nx.graph.Graph, k: int) -> ():
             if (G.has_edge(path[0], path[-1]) and test_path_length_k(G, path, k)):
                 cycle = path + (path[0],)
                 return cycle
-        
+
     return ()
 
 

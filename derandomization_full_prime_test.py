@@ -59,13 +59,13 @@ def get_kperfect_hash_family(m, n):
     family_size = 0
 
     # testing
-    print("max_k = ", min(m - 1, math.ceil(n * n * np.log(m)) - 1))
-    for k in range(1, math.ceil(n * n * np.log(m))):
-        print("k = ", k)
-        for p in range(k + 1, math.ceil(n * n * np.log(m))):
-            # above we calculated all primes below 2n^2, therefore we can skip numbers below 2n^2 if they are not marked as prime
-            if (not(isprime[p])):
-                continue
+    # iterate over all possible primes p
+    for p in range(math.ceil(n * n * np.log(m)) - 1, 1, -1):
+        # above we calculated all primes below n^2 log m, therefore we can skip non-primes
+        if (not(isprime[p])):
+            continue
+        for k in range(1, p):
+        #print("k = ", k)
 
             # we have the function h_{\alpha}(x) = (kx mod p) mod n^2
             # now iterate over all possible h_{\beta} : h_{\alpha}(U) -> {0, 1, ..., n - 1}

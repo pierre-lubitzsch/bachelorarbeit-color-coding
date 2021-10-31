@@ -11,31 +11,39 @@ import cycle_first_algo_derandomized
 import cycle_second_algo_derandomized
 import random_orientations_cycle
 import random_orientations_path
+from matplotlib import pyplot as plt
 
+# source: https://www.inetbio.org/yeastnet/downloadnetwork.php
+# we have n = 5808
 
 def main():
     if (len(sys.argv) < 4):
         print("too few arguments. you need to give 1: type of graph you want to find, 2: starting value for k, 3: end value for k")
+        sys.exit(-1)
+
     G = nx.Graph()
-    # the file contains the number of vertices in the first line and each remaining lines represents an edge between 2 vertices
-    with open("example_graphs/yeast/yeast_edges.txt") as f:
-        first_line = True
+    # the nodes in the file are labeled with strings. therefore we map each unique string to an unique integer such that the constructed graph G has the nodes {0, 1, ... n - 1}.
+    with open("example_graphs/YeastNet.v3.txt") as f:
+        n = 0
+        nodes = dict()
         for line in f:
-            if first_line:
-                G.add_nodes_from(list(range(int(line))))
-                first_line = False
-            else:
-                (u, v) = map(int, line.split())
-                # we want simple graphs and therefore no loops
-                if (u == v):
-                    continue
-                assert(u > 0 and v > 0)
-                # in the file the vertices are labeled from 1 to 2361 but we want vertices from 0 to 2360
-                G.add_edge(u - 1, v - 1)
+            (u, v, w) = line.split()
+            # we want simple graphs and therefore no loops
+            if (u == v):
+                continue
+            if (u not in nodes):
+                nodes[u] = n
+                n += 1
+            if (v not in nodes):
+                nodes[v] = n
+                n += 1
+            G.add_edge(nodes[u], nodes[v])
     
     type = sys.argv[1]
     k_begin = int(sys.argv[2])
     k_end = int(sys.argv[3])
+
+    times = []
 
     if (type == "path"):
         for i in range(k_begin, k_end + 1):
@@ -44,6 +52,7 @@ def main():
             end = timer()
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "cycle1"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -51,6 +60,7 @@ def main():
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "cycle2"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -58,6 +68,7 @@ def main():
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "path_derandomized"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -65,6 +76,7 @@ def main():
             end = timer()
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "cycle1_derandomized"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -72,6 +84,7 @@ def main():
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "cycle2_derandomized"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -79,6 +92,7 @@ def main():
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "random_orientations_path"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -86,6 +100,7 @@ def main():
             end = timer()
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
     elif (type == "random_orientations_cycle"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -93,6 +108,14 @@ def main():
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
+    
+    plt.xlabel("k")
+    plt.locator_params(axis="x", nbins = k_end - k_begin + 1)
+    plt.ylabel("time in seconds")
+    plt.plot(list(range(k_begin, k_end + 1)), times)
+    plt.show()
+    plt.savefig("plot_yeastv3_{}.png".format(type))
     
 
 
