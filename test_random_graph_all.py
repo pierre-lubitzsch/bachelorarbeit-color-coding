@@ -21,63 +21,62 @@ def main():
 
     n = int(sys.argv[3])
     p = eval(sys.argv[4]) if len(sys.argv) >= 5 else 1 / 2
-    G = nx.gnp_random_graph(n, p)
+    G = [nx.gnp_random_graph(n, p) for _ in range(10)]
     
     k_begin = int(sys.argv[1])
     k_end = int(sys.argv[2])
 
+    types = ["random_orientations_cycle", "cycle1", "cycle2", "cycle1_derandomized", "cycle2_derandomized", "path", "random_orientations_path", "path_derandomized"]
+    get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation, "path_derandomized" : path_derandomized.find_path, "cycle1_derandomized" : cycle_first_algo_derandomized.find_cycle, "cycle2_derandomized" : cycle_second_algo_derandomized.find_cycle}
     # here times[i][j][k] is the time it took to find a graph of type types[j] of size k_begin + k inside the i-th random graph
-    times = []
-    types = ["path", "cycle1", "cycle2", "random_orientations_path", "random_orientations_cycle"]
-    get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation}
-
-    for i in range(10):
-        times.append([])
-        for type in types:
-            print("The graph H we want to find is a", type)
-            times[i].append([])
-            for i in range(k_begin, k_end + 1):
-                start = timer()
-                cur_path = get_func[type](G, i)
-                end = timer()
-                print("Does G contain H with H on {} nodes? {}".format(i, cur_path))
-                print("Finding it took {:.3f} seconds\n".format(end - start))
-                times[i][-1].append(end - start)
-    
-
+    times = [[[[0] for _ in range(k_end - k_begin + 1)] for _ in range(len(types))] for _ in range(10)]
     average_times = [[0 for _ in range(k_end - k_begin + 1)] for _ in range(len(types))]
-    for i in range(len(types)):
-        for j in range(k_end - k_begin + 1):
-            for x in range(10):
-                average_times[i][j] += times[x][i][j]
-            average_times[i][j] /= 10
-    
-
     max_times = [[0 for _ in range(k_end - k_begin + 1)] for _ in range(len(types))]
-    for i in range(len(types)):
-        for j in range(k_end - k_begin + 1):
-            for x in range(10):
-                max_times[i][j] = max(max_times[i][j], times[x][i][j])
+
+    for j in range(len(types[:-3])):
+        for i in range(10):
+            print("The graph H we want to find is a", types[j])
+            for k in range(k_begin, k_end + 1):
+                start = timer()
+                cur_path = get_func[types[j]](G[i], k)
+                end = timer()
+                print("Does G contain H with H on {} nodes? {}".format(k, cur_path))
+                print("Finding it took {:.3f} seconds\n".format(end - start))
+                times[i][j][k - k_begin] = end - start
+
+                average_times[j][k - k_begin] += times[i][j][k - k_begin]
+                max_times[j][k - k_begin] = max(max_times[j][k - k_begin], times[i][j][k - k_begin])
+                # we save plots inbetween because derandomized algorithms are miuch slower and sometimes the process is killed in the middle of the run
+                if (types[j].find("derandomized") != -1):
+                    plt.xlabel("k")
+                    plt.locator_params(axis="x", nbins = k_end - k_begin + 1)
+                    plt.ylabel("time in seconds")
+                    plt.title("average & max runtime for {} on 10 random graphs".format(types[j]))
+                    plt.plot(list(range(k_begin, k_end + 1)), [x / (i + 1) for x in average_times[j]])
+                    plt.plot(list(range(k_begin, k_end + 1)), max_times[j])
+                    plt.savefig("plots/random/random_{}_{}_graphs_{}_{}_to_{}.png".format(n, p, types[j], k_begin, k_end))
+                    plt.clf()
+
+        
+        for k in range(k_end - k_begin + 1):
+            average_times[j][k] /= 10
 
 
-    for i in range(len(types)):
         plt.xlabel("k")
         plt.locator_params(axis="x", nbins = k_end - k_begin + 1)
         plt.ylabel("time in seconds")
-        plt.yscale("log")
-        plt.title("Plotting the average and max running time of the algorithm for {} on 10 random graphs".format(type))
-        plt.plot(list(range(k_begin, k_end + 1)), average_times[i])
-        plt.plot(list(range(k_begin, k_end + 1)), max_times[i])
-        plt.savefig("random_{}_{}_graphs_{}_{}_to_{}.csv".format(n, p, types[i], k_begin, k_end), "w")
+        plt.title("average & max runtime for {} on 10 random graphs".format(types[j]))
+        plt.plot(list(range(k_begin, k_end + 1)), average_times[j])
+        plt.plot(list(range(k_begin, k_end + 1)), max_times[j])
+        plt.savefig("plots/random/random_{}_{}_graphs_{}_{}_to_{}.png".format(n, p, types[j], k_begin, k_end))
         plt.clf()
     
-    f = open("random_{}_{}_graphs_{}_{}_to_{}.csv".format(n, p, type, k_begin, k_end), "w")
-    for i in range(len(types)):
-        t = str(average_times[i])
-        f.write("{}, average, {}\n".format(i, t[1:-1]))
-        t = str(max_times[i])
-        f.write("{}, max, {}\n".format(i, t[1:-1]))
-    f.close()
+        f = open("random_{}_{}_graphs_{}_{}_to_{}.csv".format(n, p, type, k_begin, k_end), "w")
+        t = str(average_times[j])
+        f.write("{}, average, {}\n".format(types[j], t[1:-1]))
+        t = str(max_times[j])
+        f.write("{}, max, {}\n".format(types[j], t[1:-1]))
+        f.close()
 
 
 if (__name__ == "__main__"):

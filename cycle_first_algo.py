@@ -59,6 +59,9 @@ def find_paths(G: nx.graph.Graph, k: int, start_vertex: int) -> [()]:
         cur_paths = find_colorful_paths_from_node(G, k, c, start_vertex)
         for path in cur_paths:
             paths.add(path)
+            if (G.has_edge(path[0], path[-1])):
+                return list(paths)
+
     
     return list(paths)
 

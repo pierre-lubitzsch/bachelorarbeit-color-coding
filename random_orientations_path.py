@@ -115,6 +115,7 @@ def find_path_random_orientation(G: nx.graph.Graph, k: int) -> []:
         path = longest_directed_path(G_directed, pi, n)
         if (len(path) >= k):
             if (test_path_length_k(G, path, k)):
+                print("found after {} tries".format(_ + 1))
                 return path[:k]
             else:
                 print("ERROR: found wrong path: {}".format(path))
