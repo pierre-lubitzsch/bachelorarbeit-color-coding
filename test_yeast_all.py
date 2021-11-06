@@ -42,12 +42,12 @@ def main():
 
     times = []
     # descriptors for possible algorithms we can use to find a specific graph H in G
-    types = ["path", "random_orientations_path", "random_orientations_cycle", "cycle1", "cycle2"]
-
+    types = ["path", "random_orientations_path", "path_derandomized", "random_orientations_cycle", "cycle1", "cycle2", "cycle1_derandomized", "cycle2_derandomized"]
     # map for the name of the algorithm name of the graph we want to find to the function which does it
-    get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation}
+    get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation, "path_derandomized" : path_derandomized.find_path, "cycle1_derandomized" : cycle_first_algo_derandomized.find_cycle, "cycle2_derandomized" : cycle_second_algo_derandomized.find_cycle}
 
-    for type in types:
+
+    for type in types[:3]:
         print("The graph H we want to find is a", type)
         times.append([])
         for i in range(k_begin, k_end + 1):
@@ -63,7 +63,7 @@ def main():
             plt.ylabel("time in seconds")
             plt.title("Plotting the running time of the algorithm for {}".format(type))
             plt.plot(list(range(k_begin, i + 1)), times[-1])
-            plt.savefig("plots/yeastv1/plot_yeastv3_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.savefig("plots/yeastv1/plot_yeastv1_{}_{}_to_{}.png".format(type, k_begin, k_end))
             plt.clf()
 
         t = str(times[-1])

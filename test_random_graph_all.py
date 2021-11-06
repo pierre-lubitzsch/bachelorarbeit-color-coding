@@ -33,7 +33,7 @@ def main():
     average_times = [[0 for _ in range(k_end - k_begin + 1)] for _ in range(len(types))]
     max_times = [[0 for _ in range(k_end - k_begin + 1)] for _ in range(len(types))]
 
-    for j in range(len(types[:-3])):
+    for j in range(len(types)):
         for i in range(10):
             print("The graph H we want to find is a", types[j])
             for k in range(k_begin, k_end + 1):
@@ -71,7 +71,7 @@ def main():
         plt.savefig("plots/random/random_{}_{}_graphs_{}_{}_to_{}.png".format(n, p, types[j], k_begin, k_end))
         plt.clf()
     
-        f = open("random_{}_{}_graphs_{}_{}_to_{}.csv".format(n, p, type, k_begin, k_end), "w")
+        f = open("random_{}_{}_graphs_{}_{}_to_{}.csv".format(n, p, types[j], k_begin, k_end), "w")
         t = str(average_times[j])
         f.write("{}, average, {}\n".format(types[j], t[1:-1]))
         t = str(max_times[j])
