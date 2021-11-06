@@ -42,12 +42,12 @@ def main():
 
     times = []
     # descriptors for possible algorithms we can use to find a specific graph H in G
-    types = ["path", "random_orientations_path", "path_derandomized", "random_orientations_cycle", "cycle1", "cycle2", "cycle1_derandomized", "cycle2_derandomized"]
+    types = ["cycle1_derandomized", "cycle2_derandomized", "random_orientations_cycle", "cycle1", "cycle2", "path", "random_orientations_path", "path_derandomized"]
     # map for the name of the algorithm name of the graph we want to find to the function which does it
     get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation, "path_derandomized" : path_derandomized.find_path, "cycle1_derandomized" : cycle_first_algo_derandomized.find_cycle, "cycle2_derandomized" : cycle_second_algo_derandomized.find_cycle}
 
 
-    for type in types[:3]:
+    for type in types[:2]:
         print("The graph H we want to find is a", type)
         times.append([])
         for i in range(k_begin, k_end + 1):

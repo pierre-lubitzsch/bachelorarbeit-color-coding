@@ -11,6 +11,7 @@ import cycle_first_algo_derandomized
 import cycle_second_algo_derandomized
 import random_orientations_cycle
 import random_orientations_path
+from matplotlib import pyplot as plt
 
 # source: http://vlado.fmf.uni-lj.si/pub/networks/data/bio/yeast/yeast.htm
 
@@ -46,12 +47,23 @@ def main():
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
     elif (type == "cycle1"):
+        times = []
         for i in range(k_begin, k_end + 1):
             start = timer()
             cur_path = cycle_first_algo.find_cycle(G, i)
             end = timer()
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+
+            times.append(end - start)
+            plt.xlabel("k")
+            plt.locator_params(axis="x", nbins = i - k_begin + 1)
+            plt.ylabel("time in seconds")
+            plt.title("Plotting the running time of the algorithm for {}".format(type))
+            plt.plot(list(range(k_begin, i + 1)), times)
+            plt.savefig("plots/yeastv1/plot_yeastv1_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.clf()
+
     elif (type == "cycle2"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -81,12 +93,23 @@ def main():
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
     elif (type == "random_orientations_path"):
+        times = []
         for i in range(k_begin, k_end + 1):
             start = timer()
             cur_path = random_orientations_path.find_path_random_orientation(G, i)
             end = timer()
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
+            times.append(end - start)
+
+            plt.xlabel("k")
+            plt.locator_params(axis="x", nbins = i - k_begin + 1)
+            plt.ylabel("time in seconds")
+            plt.title("Plotting the running time of the algorithm for {}".format(type))
+            plt.plot(list(range(k_begin, i + 1)), times)
+            plt.savefig("plots/yeastv1/plot_yeastv1_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.clf()
+
     elif (type == "random_orientations_cycle"):
         for i in range(k_begin, k_end + 1):
             start = timer()
