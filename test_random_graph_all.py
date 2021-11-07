@@ -26,7 +26,7 @@ def main():
     k_begin = int(sys.argv[1])
     k_end = int(sys.argv[2])
 
-    types = ["random_orientations_cycle", "cycle1", "cycle2", "cycle1_derandomized", "cycle2_derandomized", "path", "random_orientations_path", "path_derandomized"]
+    types = ["cycle1_derandomized", "cycle2_derandomized", "cycle1", "random_orientations_cycle", "cycle2", "path_derandomized", "path", "random_orientations_path"]
     get_func = {"path" : path.find_path, "cycle1" : cycle_first_algo.find_cycle, "cycle2" : cycle_second_algo.find_cycle, "random_orientations_path" : random_orientations_path.find_path_random_orientation, "random_orientations_cycle" : random_orientations_cycle.find_cycle_random_orientation, "path_derandomized" : path_derandomized.find_path, "cycle1_derandomized" : cycle_first_algo_derandomized.find_cycle, "cycle2_derandomized" : cycle_second_algo_derandomized.find_cycle}
     # here times[i][j][k] is the time it took to find a graph of type types[j] of size k_begin + k inside the i-th random graph
     times = [[[[0] for _ in range(k_end - k_begin + 1)] for _ in range(len(types))] for _ in range(10)]
@@ -49,7 +49,7 @@ def main():
                 # we save plots inbetween because derandomized algorithms are miuch slower and sometimes the process is killed in the middle of the run
                 if (types[j].find("derandomized") != -1):
                     plt.xlabel("k")
-                    plt.locator_params(axis="x", nbins = k_end - k_begin + 1)
+                    plt.locator_params(axis="x", nbins = k - k_begin + 1)
                     plt.ylabel("time in seconds")
                     plt.title("average & max runtime for {} on 10 random graphs".format(types[j]))
                     plt.plot(list(range(k_begin, k_end + 1)), [x / (i + 1) for x in average_times[j]])

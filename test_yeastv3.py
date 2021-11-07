@@ -69,6 +69,14 @@ def main():
             print("Does G contain C_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
             times.append(end - start)
+
+            plt.xlabel("k")
+            plt.locator_params(axis="x", nbins = i - k_begin + 1)
+            plt.ylabel("time in seconds")
+            plt.title("Plotting the running time of the algorithm for {}".format(type))
+            plt.plot(list(range(k_begin, i + 1)), times)
+            plt.savefig("plots/yeastv3/plot_yeastv3_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.clf()
     elif (type == "path_derandomized"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -77,6 +85,14 @@ def main():
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
             times.append(end - start)
+
+            plt.xlabel("k")
+            plt.locator_params(axis="x", nbins = i - k_begin + 1)
+            plt.ylabel("time in seconds")
+            plt.title("Plotting the running time of the algorithm for {}".format(type))
+            plt.plot(list(range(k_begin, i + 1)), times)
+            plt.savefig("plots/yeastv3/plot_yeastv3_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.clf()
     elif (type == "cycle1_derandomized"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -101,6 +117,14 @@ def main():
             print("Does G contain P_{}? {}".format(i, cur_path))
             print("Finding it took {:.3f} seconds\n".format(end - start))
             times.append(end - start)
+
+            plt.xlabel("k")
+            plt.locator_params(axis="x", nbins = i - k_begin + 1)
+            plt.ylabel("time in seconds")
+            plt.title("Plotting the running time of the algorithm for {}".format(type))
+            plt.plot(list(range(k_begin, i + 1)), times)
+            plt.savefig("plots/yeastv3/plot_yeastv3_{}_{}_to_{}.png".format(type, k_begin, k_end))
+            plt.clf()
     elif (type == "random_orientations_cycle"):
         for i in range(k_begin, k_end + 1):
             start = timer()
@@ -110,12 +134,6 @@ def main():
             print("Finding it took {:.3f} seconds\n".format(end - start))
             times.append(end - start)
     
-    plt.xlabel("k")
-    plt.locator_params(axis="x", nbins = k_end - k_begin + 1)
-    plt.ylabel("time in seconds")
-    plt.plot(list(range(k_begin, k_end + 1)), times)
-    plt.show()
-    plt.savefig("plot_yeastv3_{}.png".format(type))
     
 
 
