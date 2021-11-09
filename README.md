@@ -1,5 +1,5 @@
 # bachelorarbeit-color-coding
-Bachelorarbeit about finding simple paths and cycles using color-coding.
+Bachelor thesis about finding simple paths and cycles using color-coding.
 
 Files with prefix "random_orientations" are algorithms using random orientations as a method.
 Files with prefix test are files testing the algorithms on a certain graph (or multiple random graphs).
